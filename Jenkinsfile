@@ -1,3 +1,5 @@
 @Library('roboshop') _
 
-maven ()
+env.component == "shipping"
+env.codeType == "maven"
+cipipeline ()
