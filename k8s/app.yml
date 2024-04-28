@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: shipping
+   labels:
+      app: java
+      project: roboshop
+      service: shipping
+      env: dev
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         app: java
+         project: roboshop
+         service: shipping
+         env: dev
+   template:
+      metadata:
+         labels:
+            app: java
+            project: roboshop
+            service: shipping
+            env: dev
+      spec:
+         serviceAccountName: shipping
+         containers:
+            - name: shipping
+              image: hemanthtadikonda/shipping:1.0.0
+              ports:
+                 - containerPort: 8080
+              envFrom:
+                 -  configMapRef:
+                       name: shipping-config
+              resources:
+                 requests:
+                    memory: "500Mi"
+                    cpu: "250m"
+                 limits:
+                    memory: "500Mi"
+                    cpu: "250m"
+              livenessProbe:
+                 httpGet:
+                    path: /health
+                    port: 8080
+                 initialDelaySeconds: 10
+                 periodSeconds: 5
+              readinessProbe:
+                 httpGet:
+                    path: /health
+                    port: 8080
+                 initialDelaySeconds: 10
+                 periodSeconds: 5
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+   name: shipping
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: shipping
+spec:
+   selector:
+      app: java
+      project: roboshop
+      service: shipping
+      env: dev
+   ports:
+      - protocol: TCP
+        port: 8080
+        targetPort: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: shipping-config
+data:
+   DB_HOST: 'mysqldb'
+   CART_ENDPOINT: 'cart:8080'
