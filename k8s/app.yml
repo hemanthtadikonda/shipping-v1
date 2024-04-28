@@ -79,3 +79,5 @@ metadata:
 data:
    DB_HOST: 'mysqldb'
    CART_ENDPOINT: 'cart:8080'
+
+---
