@@ -26,7 +26,7 @@ spec:
          serviceAccountName: shipping
          containers:
             - name: shipping
-              image: hemanthtadikonda/shipping:1.0.0
+              image: hemanthtadikonda/shipping:1.5.0
               ports:
                  - containerPort: 8080
               envFrom:
