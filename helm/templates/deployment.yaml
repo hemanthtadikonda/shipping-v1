@@ -40,6 +40,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+            -  name: DB_HOST
+               value: 'mysqldb'
+            -  name: CART_ENDPOINT
+               value: '8080'
+          envFrom:
+            -  secretRef:
+                 name: mysql-app-cred
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -66,3 +74,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-app-cred
+data:
+  MYSQL_ROOT_PASSWORD: cm9vdDEyMw==
+  MYSQL_USER: cm9vdA==
